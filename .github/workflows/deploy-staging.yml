@@ -38,6 +38,12 @@ jobs:
           echo "$SSH_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.FRONTEND_SERVER_IP }} >> ~/.ssh/known_hosts
-          
+
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
+
+      - name: Deploy to Server
+        run: |
+          ssh ${{ secrets.FRONTEND_SERVER_USER }}@${{ secrets.FRONTEND_SERVER_IP }} "
+            docker pull andimahardika/digicommerce-fe
+            "
