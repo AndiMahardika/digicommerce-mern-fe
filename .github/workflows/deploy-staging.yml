@@ -19,6 +19,15 @@ jobs:
         run: |
           npm install -g pnpm@latest
           pnpm install
-          
+
       - name: Check Code Linter
         run: pnpm lint
+
+      - name: Build Docker Image
+        run: docker build -t andimahardika/digicommerce-fe .
+
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push Docker Image to Hub
+        run: docker push andimahardika/digicommerce-fe
