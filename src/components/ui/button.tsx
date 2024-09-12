@@ -3,7 +3,7 @@ import { twMerge } from 'tailwind-merge';
 import React from 'react';
 
 const buttonStyle = tv({
-  base: 'border font-medium transition duration-200',
+  base: 'block border font-medium transition duration-200',
   variants: {
     variant : {
       primary: 'text-white border-primary-500 bg-primary-500 hover:bg-primary-400 active:bg-primary-600',
