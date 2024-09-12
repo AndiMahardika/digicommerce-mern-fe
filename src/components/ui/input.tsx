@@ -23,11 +23,12 @@ const inputStyle = tv({
 type TInput = VariantProps<typeof inputStyle>;
 interface InputProps extends TInput, Omit<React.ComponentPropsWithRef<'input'>, 'size'> {
   icon?: React.ReactNode;
+  containerClassName?: string;
 }
 
 export const Input = (props: InputProps) => {
   return (
-    <div className="relative flex gap-2">
+    <div className={twMerge("relative flex gap-2", props.containerClassName)}>
       <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300">{props.icon}</div>
       <input {...props} size={undefined} className={twMerge(inputStyle({ ...props }), props.className)} />
     </div>
