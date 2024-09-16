@@ -1,3 +1,4 @@
+import React, { useRef, useState } from 'react';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { Select } from '../../../components/ui/select';
@@ -12,7 +13,24 @@ const CATEGORIES = [
 ];
 
 export const FormCreateProduct = () => {
+    const fileRef = useRef<HTMLInputElement>(null)
+    const downoadableFileRef = useRef<HTMLInputElement>(null)
     const { tag, tags, handleChangeTag, handleAddTag, handleDeleteTag } = useTag();
+    const [imagesPreview, setImagesPreview] = useState<string[]>([]);
+    const [downloadbleFile, setDownloadbleFile] = useState<string>('');
+
+    function handleAddImages(e : React.ChangeEvent<HTMLInputElement>) {
+      if(e.target.files) {
+        const files = Array.from(e.target.files)
+        setImagesPreview(files.map(file => URL.createObjectURL(file)))
+      }
+    }
+
+    function handleAddDownloadableFiles(e : React.ChangeEvent<HTMLInputElement>) {
+      if(e.target.files) {
+        setDownloadbleFile(e.target.files[0].name)
+      }
+    }
 
     return (
         <LayoutDashboard isCentered>
@@ -23,8 +41,30 @@ export const FormCreateProduct = () => {
                         <Input placeholder="Product Name" />
                         <Textarea placeholder="Product description" rows={6} />
                         <Select caption="Category" options={CATEGORIES} />
-                        <Button variant="outline">Add Images</Button>
-                        <Button variant="outline">Add Downloadable Files</Button>
+                        <Input type="number" placeholder="Price" />
+                        <input type='file' name='images' multiple onChange={handleAddImages} ref={fileRef} hidden accept=".jpg,.jpeg,.png"></input>
+                        <Button variant="outline" onClick={() => fileRef.current?.click()}>Add Images</Button>
+                        <div className="flex flex-wrap gap-2">
+                          {imagesPreview.map((image) => {
+                            return <img src={image} key={image} className="w-32 rounded-lg object-cover" />;
+                          })}
+                        </div>
+                        <input type="file" name='downloadbleFile' hidden ref={downoadableFileRef} onChange={handleAddDownloadableFiles} accept='.zip'/>
+                        <Button variant="outline" onClick={() => downoadableFileRef.current?.click()}>Add Downloadable Files</Button>
+                        {downloadbleFile && (
+                          <div className="flex w-fit items-center gap-2 rounded-full border px-2.5 py-1 text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                              <path
+                                fill="none"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeWidth="1.5"
+                                d="M7.918 17.807l7.89-7.553a2.253 2.253 0 000-3.284 2.503 2.503 0 00-3.43 0l-7.834 7.498a4.28 4.28 0 000 6.24c1.8 1.723 4.718 1.723 6.518 0l7.949-7.608c2.652-2.54 2.652-6.656 0-9.196-2.653-2.539-6.954-2.539-9.607 0L3 10.034"
+                              ></path>
+                            </svg>
+                            <div>{downloadbleFile}</div>
+                          </div>
+                        )}
                         <Input name="tag" placeholder="Tags" value={tag} onChange={handleChangeTag} onKeyUp={handleAddTag} />
                         <ProductTagsRenderer tags={tags} handleDeleteTag={handleDeleteTag} />
                         <Button>Submit Product</Button>
